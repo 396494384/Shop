@@ -4,7 +4,8 @@
   "description": "Node+Express+Vue+MongoDB",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app",
+    "server": "nodemon app"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,10 @@
   "bugs": {
     "url": "https://github.com/396494384/Shop/issues"
   },
-  "homepage": "https://github.com/396494384/Shop#readme"
+  "homepage": "https://github.com/396494384/Shop#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "mongoose": "^5.4.0"
+  }
 }
