@@ -16,7 +16,7 @@ router.use((req, res, next) => {
 router.get('/all', (req, res, next) => {
   Categorys.find().then(categorys => {
     jsonData.code = 200;
-    jsonData.message = "保存成功";
+    jsonData.message = "获取成功";
     jsonData.data = categorys;
     res.json(jsonData)
   })

@@ -8,6 +8,9 @@ export default {
   name: "index",
   data() {
     return {};
+  },
+  mounted(){
+    this.$store.state.nav = [];
   }
 };
 </script>

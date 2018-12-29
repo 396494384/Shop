@@ -4,8 +4,10 @@ import Index from './views/index'
 import Goods from './views/goods'
 import GoodsAdd from './views/goods_add'
 import GoodsUpdate from './views/goods_update'
+import GoodsDetails from './views/goods_details'
 import Order from './views/order'
 import User from './views/user'
+// import Login from './views/login'
 import Category from './views/category'
 Vue.use(Router)
 
@@ -15,6 +17,10 @@ export default new Router({
   routes: [
     {
       path: '/',
+      name: 'Index',
+      component: Index
+    }, {
+      path: '/index',
       name: 'Index',
       component: Index
     }, {
@@ -34,6 +40,10 @@ export default new Router({
       name: 'GoodsUpdate',
       component: GoodsUpdate
     }, {
+      path: '/goods_details',
+      name: 'GoodsDetails',
+      component: GoodsDetails
+    }, {
       path: '/order',
       name: 'Order',
       component: Order
@@ -42,5 +52,10 @@ export default new Router({
       name: 'User',
       component: User
     }
+    // , {
+    //   path: '/login',
+    //   name: 'Login',
+    //   component: Login
+    // }
   ]
 })

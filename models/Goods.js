@@ -4,6 +4,10 @@ const GoodsSchema = new mongoose.Schema({
     type:String,
     default:""
   },
+  image:{ //商品图片路径
+    type:String,
+    default:""
+  },
   category:{ //商品分类
     type: mongoose.Schema.Types.ObjectId,
     ref: "Categorys"
