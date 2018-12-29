@@ -1,6 +1,5 @@
 <template>
   <div class="car">
-    <span class="all_select">全选</span>
     <ul>
       <li>
         <label>
@@ -30,8 +29,9 @@
       </li>
     </ul>
     <div class="car_bottom">
-      <span>总价: 2000</span>
+      <i>全选</i>
       <b>去支付</b>
+      <span>总价: 2000</span>
     </div>
   </div>
 </template>
@@ -48,7 +48,6 @@ export default {
 }
 </script>
 <style>
-  .all_select{ display: block; padding: 0.3rem; font-size: 0.32rem; color: #fff; background-color: #F01414; border-top: 1px solid #eee; }
   .car ul{ overflow: hidden; }
   .car li{ width: 8.5rem; height: 2rem; margin-bottom: 0.3rem; padding: 0.2rem 0;  box-shadow: 0 0 10px 1px #ddd; background-color: #fff; position: relative; transition: all 0.5s; }
   .car li.show_del{ margin-left: -0.8rem; }
@@ -56,7 +55,7 @@ export default {
   .car li label img{ width: 0.5rem; height: 0.5rem; position: absolute; top: 50%; left: 0.3rem; margin-top: -0.25rem; }
   .car li div{ float: left; height: 100%; }
   .car li div .img img{ float: left; width: 2rem; height: 2rem; box-shadow: 0 0 1px 1px #eee inset;  }
-  .car li .info{ float: left; width: 3.9rem; height: 2rem; margin-left: 0.3rem; padding: 0.2rem 0; box-sizing: border-box; }
+  .car li .info{ float: left; width: 3.9rem; height: 2rem; margin-left: 0.3rem; padding: 0.2rem 0; box-sizing: border-box;}
   .car .info strong{ display: block; font-size: 0.32rem; color: #666; line-height: 2; }
   .car .info .price{ display: block; font-size: 0.24rem; color: #F01414; margin-bottom: 0.4rem; }
   .car .info .price b{ font-size: 0.2rem; color: #999; text-decoration: line-through; margin-left: 0.2rem; }
@@ -69,6 +68,7 @@ export default {
   .car li .del{ width: 1rem; height: 100%; position: absolute; right: 0; top: 0; border-left: 1px solid #eee; }
   .car li .del img{ width: 0.5rem; height: 0.5rem; position: absolute; top: 50%; right: 0.35rem; margin-top: -0.25rem; }
   .car_bottom{ padding:0.2rem 0.3rem; background-color: #fff; position: fixed; left: 0; right: 0; bottom: 1.08rem; border-bottom: 1px solid #ddd;  }
-  .car_bottom span{ line-height: 0.66rem; color: #F01414; font-size: 0.28rem; } 
+  .car_bottom i{ margin-right: 0.2rem; line-height: 0.66rem; font-size: 0.3rem; color: #666; letter-spacing: 1px; }
+  .car_bottom span{ float: right; margin-right: 0.3rem; line-height: 0.66rem; color: #F01414; font-size: 0.28rem; } 
   .car_bottom b{ float: right; width: 1.5rem; height: 0.66rem; line-height: 0.66rem; font-size: 0.24rem; color: #fff; background-color: #F01414; text-align: center; border-radius: 0.66rem; }
 </style>
