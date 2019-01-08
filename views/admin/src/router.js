@@ -9,6 +9,9 @@ import Order from './views/order'
 import User from './views/user'
 // import Login from './views/login'
 import Category from './views/category'
+import Banner from './views/banner'
+import BannerAdd from './views/banner_add'
+import BannerUpdate from './views/banner_update'
 Vue.use(Router)
 
 export default new Router({
@@ -20,9 +23,17 @@ export default new Router({
       name: 'Index',
       component: Index
     }, {
-      path: '/index',
-      name: 'Index',
-      component: Index
+      path: '/banner',
+      name: 'Banner',
+      component: Banner
+    }, {
+      path: '/banner_add',
+      name: 'BannerAdd',
+      component: BannerAdd
+    }, {
+      path: '/banner_update',
+      name: 'BannerUpdate',
+      component: BannerUpdate
     }, {
       path: '/category',
       name: 'Category',

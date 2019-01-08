@@ -1,9 +1,12 @@
 <template>
   <div class="index">
-    <mt-swipe :auto="3000" :prevent="true">
-      <mt-swipe-item>1111111</mt-swipe-item>
-      <mt-swipe-item>2</mt-swipe-item>
-      <mt-swipe-item>3</mt-swipe-item>
+    <mt-swipe :auto="3000" :prevent="false">
+      <mt-swipe-item v-for="(item, index) in banner" :key="index" >
+        <router-link v-if="item.relation" :to="{ path: '/goods_details', query:{ id: item.goods._id } }">
+          <img :src="item.image" >
+        </router-link>
+        <img v-else :src="item.image" >
+      </mt-swipe-item>
     </mt-swipe>
     <div class="module" v-if="news.length != 0">
       <div class="module_title">
@@ -49,6 +52,7 @@ export default {
   },
   data(){
     return {
+      banner:[],
       news:[],
       hots:[],
       goods:[]
@@ -59,6 +63,9 @@ export default {
     this.$store.state.showFootBar = true;
   },
   mounted(){
+    this.$http.get('/api/banner/all').then(data=>{
+      this.banner = data.data.data
+    })
     // 普通商品
     this.$http.post('/api/goods/get_goods', {
       sellType: '1',
@@ -71,7 +78,6 @@ export default {
       sellType: '2',
       count: 6
     }).then(data=>{
-      // console.log(data.data.data)
       this.hots = data.data.data;
     })
     // 3:最新上架
@@ -79,20 +85,19 @@ export default {
       sellType: '3',
       count: 6
     }).then(data=>{
-      // console.log(data.data.data)
       this.news = data.data.data;
     })
   }
 }
 </script>
-<style>
-.index .mint-swipe{ width: 7.5rem; height: 4rem; background-color: #fff; }
+<style scoped>
+.index .banner, .index .mint-swipe{ width: 7.5rem; height: 4rem; background-color: #fff; }
+.index .mint-swipe img{ display: block; width: 7.5rem; height: 4rem; cursor: pointer;  }
 .module{ background-color: #fff; margin: 0.3rem 0 0; }
 .module .module_title{ padding: 0 0.3rem; height: 0.88rem; border-bottom: 1px solid #f8f8f8; position: relative; }
-.module .module_title h4{ width: 3rem; font-size: 0.32rem; margin: 0 auto; color: #F01414; font-weight: bold; text-align: center; }
+.module .module_title h4{ width: 3rem; font-size: 0.32rem; margin: 0 auto; color: #FF6867; font-weight: bold; text-align: center; }
 .module .module_title h4 img{ width: 0.45rem; height: 0.45rem; vertical-align: middle; margin: -5px 0.1rem 0 0; }
 .module .module_title h4 span{ line-height: 0.88rem; }
 .module .more_link{ position: absolute; top: 0; bottom: 0; right: 0.3rem; }
 .module .more_link img{ width: 0.2rem; height: 0.35rem; margin-top: 0.27rem; }
-/* .module .module_list{ padding: 0.3rem; } */
 </style>

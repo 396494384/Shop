@@ -22,7 +22,7 @@ export default {
 }
 </script>
 <style>
-.content{ padding: 0.98rem 0 1.1rem; }
+.content{ padding: 0.88rem 0 1.1rem; }
 .not_padding{ padding-bottom: 0; }
 </style>
 

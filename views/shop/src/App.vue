@@ -9,6 +9,15 @@ export default {
   name: 'app',
   components:{
     'layouts' : layouts
+  },
+  created(){
+    this.$http.post('/api/state').then(data=>{
+      if(data.data.code == 200){
+        sessionStorage.setItem('username', data.data.data.username);
+        sessionStorage.setItem('userid', data.data.data.id);
+        this.$store.state.isLogin = true;
+      }
+    })
   }
 }
 </script>

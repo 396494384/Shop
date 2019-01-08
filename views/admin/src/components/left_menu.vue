@@ -10,35 +10,53 @@
             <i class="el-icon-menu"></i>首页
           </router-link>
         </el-menu-item>
-        <el-menu-item index="2">
+        <el-submenu index="2">
+          <template slot="title">
+            <i class="el-icon-goods"></i>
+            <span>Banner管理</span>
+          </template>
+          <el-menu-item-group>
+            <el-menu-item index="2-1">
+              <router-link :to="{ path:'/banner' }">
+                <i class="el-icon-caret-right"></i>Banner列表
+              </router-link>
+            </el-menu-item>
+            <el-menu-item index="2-2">
+              <router-link :to="{ path:'/banner_add' }">
+                <i class="el-icon-caret-right"></i>Banner添加
+              </router-link>
+            </el-menu-item>
+          </el-menu-item-group>
+        </el-submenu>
+        <el-menu-item index="3">
           <router-link slot="title" :to="{ path:'/category' }">
             <i class="el-icon-star-on"></i>商品分类
           </router-link>
         </el-menu-item>
-        <el-submenu index="3">
+        <el-submenu index="4">
           <template slot="title">
             <i class="el-icon-goods"></i>
             <span>商品管理</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item index="3-1">
+            <el-menu-item index="4-1">
               <router-link :to="{ path:'/goods' }">
                 <i class="el-icon-caret-right"></i>商品列表
               </router-link>
             </el-menu-item>
-            <el-menu-item index="3-2">
+            <el-menu-item index="4-2">
               <router-link :to="{ path:'/goods_add' }">
                 <i class="el-icon-caret-right"></i>商品添加
               </router-link>
             </el-menu-item>
           </el-menu-item-group>
         </el-submenu>
-        <el-menu-item index="4">
+        <el-menu-item index="5">
           <router-link slot="title" :to="{ path:'/order' }">
             <i class="el-icon-star-on"></i>订单管理
           </router-link>
         </el-menu-item>
-        <el-menu-item index="5">
+        <el-menu-item index="6">
           <router-link slot="title" :to="{ path:'/user' }">
             <i class="el-icon-setting"></i>用户管理
           </router-link>

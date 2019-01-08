@@ -2,6 +2,8 @@
 const express = require('express')
 const router = express.Router()
 const Goods = require('../models/Goods')
+const Collections = require('../models/Collections')
+const Records = require('../models/Records')
 const multer = require('multer');
 const fs = require('fs')
 
@@ -34,7 +36,7 @@ router.use((req, res, next) => {
   next()
 })
 //保存上传的图片
-router.post('/upload', upload.single('file'), (req, res, next)=>{
+router.post('/upload', upload.single('file'), (req, res, next) => {
   let file = 'http://' + req.headers.host + '\\' + req.file.path;
   jsonData.code = 200;
   jsonData.message = "图片上传成功";
@@ -58,9 +60,7 @@ router.get('/all', (req, res, next) => {
 })
 // 获取单个商品信息
 router.get('/goods_details', (req, res, next) => {
-  Goods.findOne({
-    _id: req.query.id
-  }).populate(['category']).then(goods => {
+  Goods.findOne({ _id: req.query.id }).populate(['category']).then(goods => {
     jsonData.code = 200;
     jsonData.message = "商品获取成功";
     jsonData.data = goods;
@@ -134,18 +134,86 @@ router.post('/search', (req, res, next) => {
 // 前台Api
 // 获取商品列表
 router.post('/get_goods', (req, res, next) => {
+  let limit = req.body.count || 8;
   let findObj = {};
-  if(req.body.sellType){//售卖类型 1:普通商品 , 2:热门商品, 3:最新上架
+  if (req.body.name) {
+    findObj.name = req.body.name
+  }
+  if (req.body.sellType) {//售卖类型 1:普通商品 , 2:热门商品, 3:最新上架
     findObj.sellType = req.body.sellType
   }
-  if(req.body.category){
+  if (req.body.category) {
     findObj.category = req.body.category
   }
-  Goods.find(findObj).limit(req.body.count).populate(['category']).then(goods => {
+  Goods.find(findObj).limit(limit).populate(['category']).then(goods => {
     jsonData.code = 200;
     jsonData.message = "商品获取成功";
     jsonData.data = goods;
     res.json(jsonData)
+  }).catch(err => {
+    jsonData.code = 0;
+    jsonData.message = "商品获取失败";
+    res.json(jsonData)
+  })
+})
+// 获取单个商品信息
+router.get('/details', (req, res, next) => {
+  let goodsid = req.query.id;
+  Goods.findOne({ _id: goodsid }).populate(['category']).then(goods => {
+    // 判断有没有添加到浏览记录中
+    Records.find({ userid: req.userInfo.id }).then(record => {
+      if (record.length > 0) {
+        let _record = record[0].records.filter(item => item._id == goodsid);
+        if (_record.length == 0) {
+          let _newrecord = record[0].records;
+          _newrecord.push(goods)
+          Records.deleteOne({ userid: req.userInfo.id }).then(() => {
+            new Records({
+              userid: req.userInfo.id,
+              records: _newrecord
+            }).save()
+          })
+        }
+      } else {
+        new Records({
+          userid: req.userInfo.id,
+          records: [goods]
+        }).save()
+      }
+      return
+    }).then(() => {
+      // 判断有没有被收藏
+      Collections.findOne({ userid: req.userInfo.id }).then(collection => {
+        if (collection) {
+          let _collection = collection.collections.filter(item => item._id == goodsid);
+          if (_collection.length > 0) {
+            jsonData.code = 200;
+            jsonData.message = "商品获取成功";
+            jsonData.data = {
+              collection: true,
+              details: goods
+            };
+            res.json(jsonData)
+          } else {
+            jsonData.code = 200;
+            jsonData.message = "商品获取成功";
+            jsonData.data = {
+              collection: false,
+              details: goods
+            };
+            res.json(jsonData)
+          }
+        } else {
+          jsonData.code = 200;
+          jsonData.message = "商品获取成功";
+          jsonData.data = {
+            collection: false,
+            details: goods
+          };
+          res.json(jsonData)
+        }
+      })
+    })
   }).catch(err => {
     jsonData.code = 0;
     jsonData.message = "商品获取失败";

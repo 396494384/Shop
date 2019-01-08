@@ -36,7 +36,6 @@ router.post('/register', (req, res, next)=>{
   Admin.findOne({
     name: req.body.name
   }).then(user=>{
-    console.log(user)
     if(user){
       resData.code = "0";
       resData.message = "用户名已存在";
@@ -44,7 +43,7 @@ router.post('/register', (req, res, next)=>{
     }else{
       new Admin({
         name: req.body.name,
-        password: bcrypt.hashSync(req.body.password, salt),
+        password: bcrypt.hashSync(req.body.password, salt)
       }).save().then(()=>{
         resData.code = "200";
         resData.message = "注册成功";

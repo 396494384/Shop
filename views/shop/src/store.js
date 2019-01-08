@@ -6,7 +6,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     pageTitle:'首页',
-    showFootBar: false
+    showFootBar: false,
+    isLogin:false
   },
   mutations: {
 

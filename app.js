@@ -34,10 +34,31 @@ app.all('*', function(req, res, next) {
 app.get('/upload/*', (req, res) => {
   res.sendFile(__dirname + "\\" + req.url);
 })
+//判断用户状态
+app.post('/state', (req, res, next)=>{ //判断用户状态
+  if(req.userInfo.id){
+    res.json({
+      code: 200,
+      message: '已登录',
+      data:req.userInfo
+    })
+  }else{
+    res.json({
+      code: 0,
+      message: '未登录'
+    })
+  }
+})
 // 设置路由
 app.use('/goods', require('./routers/goods')) //商品api
 app.use('/categorys', require('./routers/categorys')) //商品分类api
 app.use('/admin', require('./routers/admin')) //管理员api
+app.use('/banner', require('./routers/banner')) //banner Api
+app.use('/user', require('./routers/user')) //用户
+app.use('/car', require('./routers/car')) //购物车
+app.use('/collection', require('./routers/collection')) //用户收藏
+app.use('/record', require('./routers/record')) //用户浏览记录
+app.use('/address', require('./routers/address')) //用户收货地址
 
 mongoose.connect('mongodb://localhost:27021/shop', { useNewUrlParser: true }, err => {
   if (err) throw err;

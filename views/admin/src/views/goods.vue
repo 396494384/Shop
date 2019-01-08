@@ -41,8 +41,8 @@
     <el-table :data="goods" border style="width: 100%">
       <el-table-column prop="name" label="商品名称"></el-table-column>
       <el-table-column prop="category.name" label="类型" align="center" width="150"></el-table-column>
-      <el-table-column label="价格" align="center" width="150">
-        <template slot-scope="scope">{{ scope.row.price | money }}</template>
+      <el-table-column label="价格" align="center" width="250">
+        <template slot-scope="scope">{{ scope.row.saleState ? scope.row.salePrice : scope.row.price | money }} <span v-if="scope.row.saleState" style="font-size: 12px; color: #999;">( 原价:{{ scope.row.price | money }} )</span> </template>
       </el-table-column>
       <el-table-column prop="count" label="库存" align="center" width="150"></el-table-column>
       <el-table-column label="操作" align="center" width="300">
@@ -93,8 +93,7 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
-      })
-        .then(() => {
+      }).then(() => {
           this.$http.get("/api/goods/del?id=" + item._id).then(data => {
             if (data.data.code == 200) {
               this.$message({
@@ -107,8 +106,7 @@ export default {
               });
             }
           });
-        })
-        .catch(() => {});
+        }).catch(() => {});
     }
   },
   mounted() {

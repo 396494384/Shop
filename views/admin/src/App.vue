@@ -18,7 +18,6 @@ export default {
     return {};
   },
   mounted() {
-    console.log(sessionStorage.getItem("isLogin"));
     let state = sessionStorage.getItem("isLogin");
     this.$store.state.isLogin = state;
     this.$store.state.admin = sessionStorage.getItem("admin");

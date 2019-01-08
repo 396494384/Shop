@@ -2,44 +2,15 @@
   <div class="user content">
     <div class="screen">
       <el-row :gutter="20">
-        <el-col :span="5">
-          <el-select v-model="value" placeholder="请选择订单状态">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </el-col>
         <el-col :span="7">
           <div>
-            <el-input placeholder="请输入订单号" v-model="input3">
-              <template slot="prepend">订单号</template>
+            <el-input placeholder="请输入用户名" v-model="name">
+              <template slot="prepend">用户名</template>
             </el-input>
           </div>
         </el-col>
-        <el-col :span="7">
-          <div>
-            <el-input placeholder="请输入名称" v-model="input3">
-              <template slot="prepend">商品名称</template>
-            </el-input>
-          </div>
-        </el-col>
-        <el-col :span="5">
-          <el-select v-model="value" placeholder="请选择商品类型">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20" class="row2">
-        <el-col :span="21">
-          <span class="date_label">选择下单时间</span>
+        <el-col :span="14">
+          <span class="date_label">选择注册时间</span>
           <el-date-picker
             v-model="value7"
             type="daterange"
@@ -56,18 +27,23 @@
         </el-col>
       </el-row>
     </div>
-    <el-table :data="tableData" border style="width: 100%">
-      <el-table-column prop="name" label="订单号"></el-table-column>
-      <el-table-column prop="price" label="下单时间" width="180"></el-table-column>
-      <el-table-column prop="name" label="商品名称"></el-table-column>
-      <el-table-column prop="type" label="商品类型" width="180"></el-table-column>
-      <el-table-column prop="price" label="下单价格" width="180"></el-table-column>
-      <el-table-column prop="count" label="下单数量" width="100"></el-table-column>
-      <el-table-column prop="price" label="订单状态" width="100"></el-table-column>
-      <el-table-column label="操作" width="200">
+    <el-table :data="users" border style="width: 100%">
+      <el-table-column prop="_id" label="ID" ></el-table-column>
+      <el-table-column align="center" prop="username" label="用户名" ></el-table-column>
+      <el-table-column align="center" label="注册时间">
         <template slot-scope="scope">
-          <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-          <el-button type="text" size="small">编辑</el-button>
+          <span>{{ scope.row.date | date }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" prop="name" label="上次登录时间" >
+        <template slot-scope="scope">
+          <span>{{ scope.row.lastTime | date }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" prop="orderTotal" label="订单成交量" width="160"></el-table-column>
+      <el-table-column align="center" label="操作" width="160">
+        <template slot-scope="scope">
+          <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -78,6 +54,8 @@ export default {
   name: "shop",
   data() {
     return {
+      users:[],
+      name:"",
       pickerOptions2: {
         shortcuts: [
           {
@@ -109,15 +87,18 @@ export default {
           }
         ]
       },
-      value6: "",
       value7: ""
     };
   },
   mounted() {
     this.$store.state.nav = [
       { name: "用户管理", path: "/goods" },
-      { name: "用户", path: null }
+      { name: "用户列表", path: null }
     ];
+
+    this.$http.get('/api/user/all').then(data=>{
+      this.users = data.data.data
+    })
   }
 };
 </script>
