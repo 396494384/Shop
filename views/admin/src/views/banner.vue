@@ -8,18 +8,18 @@
         </el-col>
       </el-row>
     <el-table :data="banner" border style="width: 100%">
-      <el-table-column align="center" label="Banner图片" width="460">
+      <el-table-column align="center" label="Banner图片">
         <template slot-scope="scope">
           <img :src="scope.row.image" alt="">
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="goods.name" label="关联商品" width="460">
+      <el-table-column align="center" prop="goods.name" label="关联商品" width="360">
         <template slot-scope="scope">
           <span v-if="scope.row.relation">{{ scope.row.goods.name }}</span>
           <span v-else>未关联商品</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作">
+      <el-table-column align="center" label="操作" width="200">
         <template slot-scope="scope">
           <router-link :to="{ path : '/banner_update', query:{ id: scope.row._id }}">
             <el-button type="primary" size="mini" icon="el-icon-edit">编辑</el-button>

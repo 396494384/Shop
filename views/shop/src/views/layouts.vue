@@ -2,7 +2,7 @@
   <div class="layouts">
     <pagehead></pagehead>
     <div class="content" :class="{ 'not_padding' : !this.$store.state.showFootBar }">
-      <router-view></router-view>
+      <router-view v-if="isRouterAlive"></router-view>
     </div>
     <pagefoot v-if="this.$store.state.showFootBar"></pagefoot>
   </div>
@@ -16,8 +16,26 @@ export default {
     "pagehead": pagehead,
     "pagefoot": pagefoot
   },
+  provide(){
+    return {
+      reload: this.reload
+    }
+  },
   data(){
-    return {}
+    return {
+      isRouterAlive: false
+    }
+  },
+  methods:{
+    reload(){
+      this.isRouterAlive = false;
+      this.$nextTick(()=>{
+        this.isRouterAlive = true;
+      })
+    }
+  },
+  created(){
+    this.reload()
   }
 }
 </script>

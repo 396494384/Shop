@@ -40,13 +40,16 @@
           <span>{{ scope.row.lastTime | date }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="orderTotal" label="订单成交量" width="160"></el-table-column>
-      <el-table-column align="center" label="操作" width="160">
+      <el-table-column align="center" prop="orderTotal" label="订单成交量" width="130"></el-table-column>
+      <!-- <el-table-column align="center" label="操作" width="160">
         <template slot-scope="scope">
           <el-button @click="handleClick(scope.row)" type="primary" size="small">查看</el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
+    <div class="pager">
+      <el-pagination background layout="prev, pager, next" :page-size="limit" :total="total" @current-change="pagination"></el-pagination>
+    </div>
   </div>
 </template>
 <script>
@@ -55,6 +58,8 @@ export default {
   data() {
     return {
       users:[],
+      total:0,
+      limit:1,
       name:"",
       pickerOptions2: {
         shortcuts: [
@@ -90,15 +95,21 @@ export default {
       value7: ""
     };
   },
+  methods:{
+    pagination(page){
+      this.$http.post('/api/user/all', { page: page }).then(data=>{
+        this.users = data.data.data.users
+        this.total = data.data.data.total;
+        this.limit = data.data.data.limit;
+      })
+    }
+  },
   mounted() {
     this.$store.state.nav = [
       { name: "用户管理", path: "/goods" },
       { name: "用户列表", path: null }
     ];
-
-    this.$http.get('/api/user/all').then(data=>{
-      this.users = data.data.data
-    })
+    this.pagination(1)
   }
 };
 </script>

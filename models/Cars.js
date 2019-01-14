@@ -1,12 +1,16 @@
 const mongoose = require('mongoose')
 const CarsSchema = new mongoose.Schema({
-  userid:{
-    type: String,
-    default: ""
+  user:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Users"
   },
   goods:{
-    type: Array,
-    default: []
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Goods"
+  },
+  count:{
+    type: Number,
+    default: 0
   }
 })
 module.exports = mongoose.model('Cars', CarsSchema);

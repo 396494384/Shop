@@ -4,73 +4,105 @@ const bcrypt = require('bcryptjs')
 const salt = bcrypt.genSaltSync(10)
 const User = require('../models/Users')
 
-router.use((req, res, next) => {
-  resData = {
-    code: '',
-    data: "",
-    message: "OK"
+//根据Cookies判断登录状态
+router.get('/state', (req, res) => {
+  if (req.user.id) {
+    res.json({
+      code: 200,
+      message: '已登录',
+      data: req.user
+    })
+  } else {
+    res.json({
+      code: 0,
+      message: '未登录'
+    })
   }
-  next();
 })
 // 用户登录
 router.post('/login', (req, res) => {
   User.findOne({
-    username: req.body.username
+    name: req.body.name
   }).then(user => {
     if (!user) {
-      resData.code = 0;
-      resData.message = "用户名不存在";
-      res.json(resData)
+      res.json({
+        code: 0,
+        message: "用户名不存在"
+      })
     } else {
-      let state = bcrypt.compareSync(req.body.password, user.password);
-      resData.code = state ? "200" : "0";
-      resData.message = state ? "登录成功" : "密码错误";
-      resData.data = user;
+      let _state = bcrypt.compareSync(req.body.password, user.password);
       // 登录成功 保存用户信息到cookies
-      if(state){
-        req.cookies.set('userInfo', JSON.stringify({
+      if (_state) {
+        req.cookies.set('user', JSON.stringify({
           id: user._id,
-          username: user.username
+          name: user.name
         }));
-        User.updateOne({
-          username: req.body.username
-        }, {
-          lastTime: new Date()
-        }).then(()=>{
-          res.json(resData)
-        })
+        User.updateOne(
+          { name: req.body.name },
+          { lastTime: new Date() }
+        )
       }
-      res.json(resData)
+      res.json({
+        code: _state ? 200 : 0,
+        message: _state ? "登录成功" : "密码错误",
+        data: user
+      })
     }
   })
 })
 // 用户注册
 router.post('/register', (req, res) => {
-  User.findOne({ username: req.body.username }).then(user => {
+  User.findOne({
+    name: req.body.name
+  }).then(user => {
     if (user) {
-      resData.code = 0;
-      resData.message = "用户名已存在";
-      res.json(resData)
+      res.json({
+        code: 0,
+        message: "用户名已存在"
+      })
     } else {
       new User({
-        username: req.body.username,
+        name: req.body.name,
         password: bcrypt.hashSync(req.body.password, salt)
       }).save().then(() => {
-        resData.code = 200;
-        resData.message = "注册成功";
-        res.json(resData)
+        res.json({
+          code: 200,
+          message: "注册成功"
+        })
       })
     }
   })
 })
 //获取全部用户
-router.get('/all', (req, res)=>{
-  User.find().sort({ date: -1 }).then(users=>{
-    resData.code = 200;
-    resData.message = "获取成功";
-    resData.data = users
-    res.json(resData)
+router.post('/all', (req, res) => {
+  let _page = req.body.page || 1;
+  let _pages = 0;
+  let _limit = 3;
+  User.countDocuments().then(count => {
+    _pages = Math.ceil(count / _limit);
+    _page = Math.min(_page, _pages);
+    _page = Math.max(_page, 1);
+    let _skip = (_page - 1) * _limit;
+    User.find().limit(_limit).skip(_skip).sort({ date: -1 }).then(users => {
+      res.json({
+        code: 200,
+        message: "获取成功",
+        data: {
+          users: users,
+          total: count,
+          limit: _limit
+        }
+      })
+    })
   })
 })
-
-module.exports = router
+//退出
+router.get('/logout', (req, res) => {
+  req.cookies.set('user', null)
+  res.json({
+    code: 200,
+    message: "退出成功",
+    data: req.user
+  })
+})
+module.exports = router;

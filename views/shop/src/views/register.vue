@@ -3,7 +3,7 @@
     <form>
       <label>
         请输入用户名
-        <input type="text" placeholder="请输入用户名" v-model="username">
+        <input type="text" placeholder="请输入用户名" v-model="name">
       </label>
       <label>
         请输入密码
@@ -26,14 +26,14 @@ export default {
   name: "register",
   data() {
     return {
-      username: "",
+      name: "",
       password: "",
       repassword: ""
     };
   },
   methods: {
     register() {
-      if (this.username == "") {
+      if (this.name == "") {
         this.showToast("请输入用户名");
       } else if (this.password == "") {
         this.showToast("请输入密码");
@@ -43,14 +43,14 @@ export default {
         this.showToast("两次密码不一致");
       } else {
         this.$http.post("/api/user/register", {
-          username: this.username,
+          name: this.name,
           password: this.password
         }).then(data => {
           this.showToast(data.data.message);
           if(data.data.code == 200){
             setTimeout(()=>{
               this.$router.push({ path: '/login' })
-            },1200)
+            },1000)
           }
         });
       }

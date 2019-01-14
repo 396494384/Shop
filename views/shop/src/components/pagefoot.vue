@@ -1,7 +1,7 @@
 <template>
   <div class="pagefoot">
     <div>
-      <span :class="{ 'active' : page == '/' }" @click="jupm('/')">
+      <span :class="{ 'active' : this.$store.state.pageTitle == '首页' }" @click="jupm('/')">
         <img src="../assets/images/icon_foot1.png"  />
         <img class="active_img" src="../assets/images/icon_foot_active1.png"  />
         首页
@@ -16,7 +16,7 @@
         <img class="active_img" src="../assets/images/icon_foot_active3.png"  />
         购物车
       </span>
-      <span :class="{ 'active' : page == '/my' }" @click="jupm('/my')">
+      <span :class="{ 'active' : this.$store.state.pageTitle == '我的' }" @click="jupm('/my')">
         <img src="../assets/images/icon_foot4.png"  />
         <img class="active_img" src="../assets/images/icon_foot_active4.png"  />
         我的

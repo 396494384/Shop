@@ -51,12 +51,12 @@
             </el-menu-item>
           </el-menu-item-group>
         </el-submenu>
-        <el-menu-item index="5">
+        <!-- <el-menu-item index="5">
           <router-link slot="title" :to="{ path:'/order' }">
             <i class="el-icon-star-on"></i>订单管理
           </router-link>
-        </el-menu-item>
-        <el-menu-item index="6">
+        </el-menu-item> -->
+        <el-menu-item index="5">
           <router-link slot="title" :to="{ path:'/user' }">
             <i class="el-icon-setting"></i>用户管理
           </router-link>

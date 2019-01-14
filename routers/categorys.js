@@ -3,60 +3,51 @@ const express = require('express')
 const router = express.Router()
 const Categorys = require('../models/Categorys')
 
-router.use((req, res, next) => {
-  jsonData = {
-    code: 0,
-    message: "",
-    data: []
-  }
-  next()
-})
-
 // 获取全部分类
-router.get('/all', (req, res, next) => {
+router.get('/all', (req, res) => {
   Categorys.find().then(categorys => {
-    jsonData.code = 200;
-    jsonData.message = "获取成功";
-    jsonData.data = categorys;
-    res.json(jsonData)
+    res.json({
+      code: 200,
+      message: "获取成功",
+      data: categorys
+    })
   })
 })
 // 添加商品分类
-router.get('/add', (req, res, next) => {
+router.get('/add', (req, res) => {
   Categorys.findOne({
     name: req.query.name
   }).then(category => {
     if (category) {
-      jsonData.code = 0;
-      jsonData.message = "已存在相同分类名";
-      res.json(jsonData)
+      res.json({
+        code: 0,
+        message: "已存在相同分类名"
+      })
     } else {
       new Categorys({
         name: req.query.name
       }).save(() => {
-        Categorys.find().then(categorys=>{
-          jsonData.code = 200;
-          jsonData.message = "保存成功";
-          jsonData.data = categorys;
-          res.json(jsonData)
+        Categorys.find().then(categorys => {
+          res.json({
+            code: 200,
+            message: "保存成功",
+            data: categorys
+          })
         })
       })
     }
   })
 })
 // 删除商品分类
-router.get('/del', (req, res, next) => {
+router.get('/del', (req, res) => {
   Categorys.deleteOne({
     _id: req.query.id
-  }).then(()=>{
-    jsonData.code = 200;
-    jsonData.message = "删除成功";
-    res.json(jsonData)
-  }).catch(err=>{
-    jsonData.code = 0;
-    jsonData.message = "删除失败";
-    res.json(jsonData)
+  }).then(() => {
+    res.json({
+      code: 200,
+      message: "删除成功"
+    })
   })
 })
 
-module.exports = router
+module.exports = router;

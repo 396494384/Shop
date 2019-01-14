@@ -72,7 +72,7 @@ export default {
   name: "goods_add",
   data() {
     return {
-      goodsId: "",
+      id: "",
       categorys: [],
       goodsData: {
         category: "", //商品类型
@@ -103,30 +103,59 @@ export default {
       }
     },
     goodsUpdate() {
-      let goodsdata = this.goodsData;
-      if (goodsdata.category == "") {
+      let _goodsdata = this.goodsData;
+      if (_goodsdata.category == "") {
         this.showMsg("请选择商品分类");
-      } else if (goodsdata.name == "") {
+      } else if (_goodsdata.name == "") {
         this.showMsg("请输入商品名称");
       } else if (this.src == "") {
         this.showMsg("请选择要上传的商品图片");
-      } else if (goodsdata.price == "") {
+      } else if (_goodsdata.price == "") {
         this.showMsg("请输入商品价格");
-      } else if (goodsdata.saleState && goodsdata.salePrice == "") {
+      } else if (_goodsdata.saleState && _goodsdata.salePrice == "") {
         this.showMsg("请输入打折后的价格");
-      } else if (goodsdata.count == "") {
+      } else if (_goodsdata.count == "") {
         this.showMsg("请输入商品库存");
-      } else if (goodsdata.desc == "") {
+      } else if (_goodsdata.desc == "") {
         this.showMsg("请输入商品描述");
       } else {
         // 图片没有修改
-        if (this.src == goodsdata.image) {
-          this.$http
-            .post("api/goods/update", {
-              goodsId: this.goodsId,
-              goodsData: goodsdata
-            })
-            .then(data => {
+        if (this.src == _goodsdata.image) {
+          this.$http.post("api/goods/update", {
+            id: this.id,
+            goodsData: _goodsdata
+          }).then(data => {
+            if (data.data.code == 200) {
+              this.showMsg(data.data.message, "success");
+              setTimeout(() => {
+                this.$router.push({ path: "/goods" });
+              }, 1000);
+            }
+          });
+        } else {
+          // 上传图片
+          let _formData = new FormData();
+          _formData.append("file", this.$refs.image.files[0]);
+          this.$http({
+            method: "post",
+            url: "api/goods/upload",
+            anync: true,
+            contentType: false,
+            processData: false,
+            data: _formData
+          }).then(data => {
+            if (data.data.code) {
+              return data;
+            } else {
+              this.showMsg("图片上传失败", "error");
+            }
+          }).then(data => {
+            //上传商品信息
+            _goodsdata.image = data.data.data;
+            this.$http.post("api/goods/update", {
+              id: this.id,
+              goodsData: _goodsdata
+            }).then(data => {
               if (data.data.code == 200) {
                 this.showMsg(data.data.message, "success");
                 setTimeout(() => {
@@ -134,43 +163,7 @@ export default {
                 }, 1000);
               }
             });
-        } else {
-          // 上传图片
-          let formData = new FormData();
-          formData.append("file", this.$refs.image.files[0]);
-          this.$http({
-            method: "post",
-            url: "api/goods/upload",
-            anync: true,
-            contentType: false,
-            processData: false,
-            data: formData
-          })
-            .then(data => {
-              console.log(data.data.code);
-              if (data.data.code) {
-                return data;
-              } else {
-                this.showMsg("图片上传失败", "error");
-              }
-            })
-            .then(data => {
-              //上传商品信息
-              goodsdata.image = data.data.data;
-              this.$http
-                .post("api/goods/update", {
-                  goodsId: this.goodsId,
-                  goodsData: goodsdata
-                })
-                .then(data => {
-                  if (data.data.code == 200) {
-                    this.showMsg(data.data.message, "success");
-                    setTimeout(() => {
-                      this.$router.push({ path: "/goods" });
-                    }, 1000);
-                  }
-                });
-            });
+          });
         }
       }
     },
@@ -190,7 +183,7 @@ export default {
       { name: "商品管理", path: "/goods" },
       { name: "商品修改", path: null }
     ];
-    this.goodsId = this.$route.query.id;
+    this.id = this.$route.query.id;
     // 获取商品分类
     this.$http.get("/api/categorys/all").then(data => {
       if (data.data.code == 200) {
@@ -198,7 +191,7 @@ export default {
       }
     });
     // 获取要修改的商品信息
-    this.$http.get(`/api/goods/goods_details?id=${this.goodsId}`).then(data => {
+    this.$http.get(`/api/goods/goods_details?id=${this.id}`).then(data => {
       this.goodsData = data.data.data;
       this.src = this.goodsData.image;
     });

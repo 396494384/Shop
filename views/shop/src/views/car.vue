@@ -1,9 +1,9 @@
 <template>
   <div class="car">
     <ul>
-      <li v-for="(item, index) in cars" :key="index" :class="{ 'show_del' : item.goods.showDel }" ref="item" @touchstart="touchstart" @touchend="touchend" :data-id="item.goods._id">
+      <li v-for="(item, index) in cars" :key="index" :class="{ 'show_del' : item.showDel }" ref="item" @touchstart="touchstart" @touchend="touchend" :data-id="item.goods._id">
         <label @click="check(item.goods._id)">
-          <img v-if="!item.goods.check" src="../assets/images/icon_check1.png" />
+          <img v-if="!item.check" src="../assets/images/icon_check1.png" />
           <img v-else src="../assets/images/icon_check2.png" />
         </label>
         <div>
@@ -41,12 +41,12 @@ export default {
   name:'car',
   data(){
     return {
+      delId:"",
       cars:null,
       total:0,
       checkState: false,
       moveStart:0,
-      moveEnd:0,
-      delId:""
+      moveEnd:0
     }
   },
   methods:{
@@ -54,44 +54,44 @@ export default {
     calculation(){ 
       this.total = 0;
       this.cars.forEach(i=>{
-        if(i.goods.check){
+        if(i.check){
           this.total += i.goods.saleState ? i.goods.salePrice * i.count : i.goods.price * i.count
         }
       })
     },
     // 判断是否全部都选中
     judgeCheck(){
-      let number = 0;
+      let _number = 0;
       this.cars.forEach(i=>{
-        if(i.goods.check){
-          number++;
+        if(i.check){
+          _number++;
         }else{
           this.checkState = false
         }
       })
-      if(this.cars.length == number){
+      if(this.cars.length == _number){
         this.checkState = true
       }
     },
     // 单项选择
     check(id){
-      let cars = this.cars;
-      cars.forEach(i=>{
+      let _cars = this.cars;
+      _cars.forEach(i=>{
         if(i.goods._id == id){
-          i.goods.check = !i.goods.check
+          i.check = !i.check
         }
       })
-      this.cars = cars
+      this.cars = _cars
       this.calculation()
       this.judgeCheck()
     },
     checkAll(){
-      let cars = this.cars;
+      let _cars = this.cars;
       this.checkState = !this.checkState;
-      cars.forEach(i=>{
-        i.goods.check = this.checkState
+      _cars.forEach(i=>{
+        i.check = this.checkState
       })
-      this.cars = cars
+      this.cars = _cars
       this.calculation()
     },
     //获取触摸坐标
@@ -102,7 +102,7 @@ export default {
           if(i.dataset.id){
             this.delId = i.dataset.id
           }
-        }catch(err){
+        }catch(err){ 
           // throw err
         }
       })
@@ -114,9 +114,9 @@ export default {
       _cars.forEach(i=>{
         if(i.goods._id == this.delId) {
           if(this.moveStart > this.moveEnd && this.moveStart - this.moveEnd > 50){ //向左
-            i.goods.showDel = true
+            i.showDel = true
           }else if(this.moveStart < this.moveEnd && this.moveEnd - this.moveStart > 50){ //向右
-            i.goods.showDel = false
+            i.showDel = false
           }
         }
       })
@@ -126,7 +126,7 @@ export default {
     delCar(e){
       MessageBox.confirm('确定要删除当前商品?').then(action => {
         this.$http.post('/api/car/remove',{
-          goodsid: this.delId
+          id: this.delId
         }).then(data=>{
           Toast({
             message: data.data.message,
@@ -150,8 +150,8 @@ export default {
     this.$http.get('/api/car/cars').then(data=>{
       if(data.data.code == 200){
         data.data.data.forEach(i=>{
-          i.goods.check = false
-          i.goods.showDel = false
+          i.check = false
+          i.showDel = false
         })
         this.cars = data.data.data
         this.calculation()

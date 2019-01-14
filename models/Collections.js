@@ -1,12 +1,12 @@
 const mongoose = require('mongoose')
 const CollectionsSchema = new mongoose.Schema({
-  userid: {
-    type: String,
-    required: true
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Users"
   },
-  collections: {
-    type: Array,
-    default: []
+  goods: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Goods"
   }
 })
 

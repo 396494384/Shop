@@ -12,19 +12,21 @@
       </el-form-item>
       <el-form-item label="是否关联商品">
         <el-col :span="18">
-          <el-col :span="2">
-            <el-switch v-model="relation"></el-switch>
-          </el-col>
-          <el-col :span="5">
-            <el-select v-model="selectedCategory" placeholder="请选择商品类型" :disabled="!relation" @change="categoryChange">
-              <el-option v-for="(item, index) in categorys" :key="index" :label="item.name" :value="item._id"></el-option>
-            </el-select>
-          </el-col>
-          <el-col :span="8">
-            <el-select v-model="selectedGoods" placeholder="请选择要关联的商品" :disabled="!relation || goods.length == 0">
-              <el-option v-for="(item, index) in goods" :key="index" :label="item.name" :value="item._id"></el-option>
-            </el-select>
-          </el-col>
+          <el-row :gutter="20">
+            <el-col :span="2">
+              <el-switch v-model="relation"></el-switch>
+            </el-col>
+            <el-col :span="5">
+              <el-select v-model="selectedCategory" placeholder="请选择商品类型" :disabled="!relation" @change="categoryChange">
+                <el-option v-for="(item, index) in categorys" :key="index" :label="item.name" :value="item._id"></el-option>
+              </el-select>
+            </el-col>
+            <el-col :span="7">
+              <el-select v-model="selectedGoods" placeholder="请选择要关联的商品" :disabled="!relation">
+                <el-option v-for="(item, index) in goods" :key="index" :label="item.name" :value="item._id"></el-option>
+              </el-select>
+            </el-col>
+          </el-row>
         </el-col>
       </el-form-item>
       <el-form-item>

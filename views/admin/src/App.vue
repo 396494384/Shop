@@ -15,26 +15,27 @@ export default {
     login: login
   },
   data() {
-    return {};
+    return { };
   },
-  mounted() {
-    let state = sessionStorage.getItem("isLogin");
-    this.$store.state.isLogin = state;
-    this.$store.state.admin = sessionStorage.getItem("admin");
-    // if (state) {
-    //   this.$router.push({ path: "/" });
-    // } 
-    // else {
-    //   this.$router.push({ path: "/login" });
-    // }
+  created(){
+    this.$http.get('/api/admin/state').then(data=>{
+      if(data.data.code == 200){
+        this.$store.state.isLogin = data.data.data.isLogin;
+        this.$store.state.admin = data.data.data.name;
+      }else{
+        this.$store.state.isLogin = false;
+        this.$store.state.admin = "";
+      }
+      sessionStorage.setItem('isLogin', this.$store.state.isLogin);
+      sessionStorage.setItem('admin', this.$store.state.admin);
+    })
   }
 };
 </script>
-
-
 <style>
 #app {
   width: 100%;
   height: 100%;
 }
+.pager{ text-align: center; padding: 20px 0 30px; }
 </style>

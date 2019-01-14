@@ -1,12 +1,12 @@
 const mongoose = require('mongoose')
 const RecordsSchema = new mongoose.Schema({
-  userid: {
-    type: String,
-    required: true
+  user:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Users"
   },
-  records: {
-    type: Array,
-    default: []
+  goods:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Goods"
   }
 })
 

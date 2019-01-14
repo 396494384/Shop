@@ -57,6 +57,9 @@
         </template>
       </el-table-column>
     </el-table>
+    <div class="pager">
+      <el-pagination background layout="prev, pager, next" :page-size="limit" :total="total" @current-change="pagination"></el-pagination>
+    </div>
   </div>
 </template>
 <script>
@@ -66,6 +69,8 @@ export default {
     return {
       categorys: [],
       goods: [],
+      total:0,
+      limit:1,
       searchData: {
         name: "",
         category: "",
@@ -107,6 +112,16 @@ export default {
             }
           });
         }).catch(() => {});
+    },
+    pagination(page){
+      // 获取商品
+      this.$http.post("/api/goods/all", { page: page }).then(data => {
+        if (data.data.code == 200) {
+          this.goods = data.data.data.goods;
+          this.total = data.data.data.total;
+          this.limit = data.data.data.limit;
+        }
+      });
     }
   },
   mounted() {
@@ -115,11 +130,7 @@ export default {
       { name: "商品列表", path: null }
     ]
     // 获取商品
-    this.$http.get("/api/goods/all").then(data => {
-      if (data.data.code == 200) {
-        this.goods = data.data.data;
-      }
-    });
+    this.pagination(1)
     // 获取商品分类
     this.$http.get("/api/categorys/all").then(data => {
       if (data.data.code == 200) {

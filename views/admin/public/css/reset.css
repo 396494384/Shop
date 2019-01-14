@@ -49,8 +49,8 @@ table {
 
 html, body{ width: 100%; height: 100%; font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif; background-color: #f8f8f8; }
 
-.el-header .el-dropdown{ float: right; user-select: none; margin-top: 15px; }
-.el-header .el-dropdown-link{ color: #fff; }
+.el-header .el-dropdown{ float: right; user-select: none; }
+.el-header .el-dropdown-link{ color: #fff; height: 60px; line-height: 60px; }
 .el-container, .el-menu-vertical-demo { height: 100%; }
 .el-menu-item-group__title { display: none; padding: 0; }
 .el-menu li{ background-color: transparent !important; }

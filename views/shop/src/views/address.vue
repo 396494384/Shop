@@ -1,5 +1,5 @@
 <template>
-  <div class="address">
+  <div class="address_list">
     <ul>
       <li class="item" v-for="(item, index) in address" :key="index">
         <p class="consignee">
@@ -25,7 +25,7 @@
 <script>
 import { Toast, MessageBox } from 'mint-ui'
 export default {
-  name:'address',
+  name:'address_list',
   data(){
     return {
       address:[]
@@ -86,6 +86,6 @@ export default {
 .item .operation .right a, .item .operation .right span{ display: inline-block; font-size: 0.24rem; color: #999; line-height: 0.4rem; padding-left: 0.45rem; }
 .item .operation .right a{ background: url(../assets/images/icon_redact.png) no-repeat left center; background-size: 0.34rem 0.34rem; }
 .item .operation .right span{ background: url(../assets/images/icon_del2.png) no-repeat left center; background-size: 0.34rem 0.34rem; margin-left: 0.3rem; }
-.append{ display: block; width: 6.9rem; height: 0.8rem; line-height: 0.8rem; margin: 1rem auto 0; background-color: #FF6767; color: #fff; font-size: 0.36rem; border-radius: 0.8rem; text-align: center; }
-.append img{ width: 0.38rem; height: 0.38rem; margin-right: 0.15rem; vertical-align: middle; margin-top: -3px; }
+.append{ display: block; width: 6.9rem; height: 0.8rem; line-height: 0.8rem; margin: 1rem auto 0; background-color: #FF6767; color: #fff; font-size: 0.32rem; border-radius: 0.8rem; text-align: center; }
+.append img{ width: 0.34rem; height: 0.34rem; margin-right: 0.15rem; vertical-align: middle; margin-top: -3px; }
 </style>

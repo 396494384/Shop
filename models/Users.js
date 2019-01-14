@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const usersSchema = new mongoose.Schema({
-  username:{ //用户名
+  name:{ //用户名
     type: String,
     default:""
   },

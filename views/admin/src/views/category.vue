@@ -8,16 +8,10 @@
         <el-button type="primary" icon="el-icon-circle-plus-outline" @click="categoryAdd">添加新分类</el-button>
       </el-col>
     </el-row>
-    <div class="tags">
+    <div class="tags" v-if="showTags">
       <h4>当前商品分类</h4>
       <el-alert v-if="categorys.length == 0" title="当前还没有商品分类!" type="error" :closable="false"></el-alert>
-      <el-tag
-        v-else
-        v-for="(item, index) in categorys"
-        :key="index"
-        @close="categoryDel(item._id)"
-        closable
-      >{{ item.name }}</el-tag>
+      <el-tag v-else v-for="(item, index) in categorys" :key="index" @close="categoryDel(item._id)" closable>{{ item.name }}</el-tag>
     </div>
   </div>
 </template>
@@ -27,7 +21,8 @@ export default {
   data() {
     return {
       categorys: [],
-      category: ""
+      category: "",
+      showTags:false
     };
   },
   methods: {
@@ -88,6 +83,7 @@ export default {
     this.$http.get("/api/categorys/all").then(data => {
       if (data.data.code == 200) {
         this.categorys = data.data.data;
+        this.showTags = true
       }
     });
   }

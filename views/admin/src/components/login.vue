@@ -32,17 +32,13 @@ export default {
           name: this.name,
           password: this.password
         }).then(data=>{
+          let _type = data.data.code == 200 ? 'success' : 'error'
+          this.showMsg(data.data.message, _type)
           if(data.data.code == 200){
-            this.showMsg(data.data.message, 'success')
             setTimeout(()=>{
-              this.$store.state.isLogin = true
-              this.$store.state.admin = data.data.data.name
-              sessionStorage.setItem('isLogin', true);
-              sessionStorage.setItem('admin', data.data.data.name);
-              this.$router.push({path: '/'});
+              this.$router.go(0);
             },1000)
           }else{
-            this.showMsg(data.data.message)
             this.$store.state.isLogin = false;
           }
         })

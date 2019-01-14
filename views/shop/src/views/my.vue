@@ -4,39 +4,39 @@
       <img src="../assets/images/my/bg_my_top.jpg" class="bg" />
       <div class="user">
         <img src>
-        <span>{{ username }}</span>
+        <span>{{ name }}</span>
       </div>
     </div>
     <div class="order_links">
       <dl>
         <dt>
           <strong>我的订单</strong>
-          <router-link :to="{ path : '/' }">
+          <router-link :to="{ path : '/my' }">
             <span>查看全部订单</span>
             <img src="../assets/images/my/icon_right2.png" />
           </router-link>
         </dt>
         <dd>
-          <router-link :to="{ path : '/' }">
+          <router-link :to="{ path : '/my' }">
             <img src="../assets/images/my/icon_wl1.png" />
             <span>待付款</span>
             <!-- <span class="circle">1</span> -->
           </router-link>
-          <router-link :to="{ path : '/' }">
+          <router-link :to="{ path : '/my' }">
             <img src="../assets/images/my/icon_wl2.png" />
             <span>待发货</span>
             <!-- <span class="circle">1</span> -->
           </router-link>
-          <router-link :to="{ path : '/' }">
+          <router-link :to="{ path : '/my' }">
             <img src="../assets/images/my/icon_wl3.png" />
             <span>待收货</span>
             <!-- <span class="circle">1</span> -->
           </router-link>
-          <router-link :to="{ path : '/' }">
+          <router-link :to="{ path : '/my' }">
             <img src="../assets/images/my/icon_wl4.png" />
             <span>已完成</span>
           </router-link>
-          <router-link :to="{ path : '/' }">
+          <router-link :to="{ path : '/my' }">
             <img src="../assets/images/my/icon_wl5.png" />
             <span>退款/售后</span>
           </router-link>
@@ -92,20 +92,40 @@
         </li> -->
       </ul>
     </div>
+    <span class="logout" @click="logout">退出登录</span>
   </div>
 </template>
 <script>
+import { Toast } from 'mint-ui'
 export default {
   name: "my",
   data() {
     return {
-      username:""
+      name:""
     };
+  },
+  methods:{
+    logout(){
+      this.$http.get('/api/user/logout').then(data=>{
+        if(data.data.code == 200){
+          Toast({
+            message: data.data.message,
+            duration: 1000
+          })
+          setTimeout(()=>{
+            sessionStorage.setItem('name', "");
+            sessionStorage.setItem('id', "");
+            this.$store.state.isLogin = false;
+            this.$router.push({ path : '/' })
+          },1000)
+        }
+      })
+    },
   },
   created() {
     this.$store.state.pageTitle = "我的";
     this.$store.state.showFootBar = true;
-    this.username = sessionStorage.getItem('username');
+    this.name = sessionStorage.getItem('name');
   }
 };
 </script>
@@ -134,4 +154,5 @@ export default {
 .more_links a, .more_links label{ width: 100%; height: 100%; display: flex; justify-content: space-between; align-items: center; align-content: center; }
 .more_links span{ height: 100%; display: flex; flex-direction: row; align-content: center; align-items: center; }
 .more_links span img{ width: 0.40rem; height: 0.35rem; margin-right: 0.14rem; }
+.logout{ display: block; margin: 0 0.3rem 0.4rem; text-align: center; color: #fff; line-height: 0.88rem; background-color: #FF6767; border-radius: 0.1rem; font-size: 0.28rem; }
 </style>

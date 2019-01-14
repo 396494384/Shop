@@ -3,7 +3,7 @@
     <form>
       <label>
         请输入用户名
-        <input type="text" placeholder="请输入用户名" v-model="username" />
+        <input type="text" placeholder="请输入用户名" v-model="name" />
       </label>
       <label>
         请输入密码
@@ -20,28 +20,28 @@ export default {
   name: "login",
   data() {
     return {
-      username: "",
+      name: "",
       password: ""
     };
   },
   methods: {
     login() {
-      if (this.username == "") {
+      if (this.name == "") {
         this.showToast("请输入用户名");
       } else if (this.password == "") {
         this.showToast("请输入密码");
       } else {
         this.$http.post("/api/user/login", {
-          username: this.username,
+          name: this.name,
           password: this.password
         }).then(data => {
           if(data.data.code == 200){
-            sessionStorage.setItem('username', data.data.data.username);
-            sessionStorage.setItem('userid', data.data.data.id);
+            sessionStorage.setItem('name', data.data.data.name);
+            sessionStorage.setItem('id', data.data.data.id);
             this.$store.state.isLogin = true;
             setTimeout(()=>{
-              this.$router.go(-1)
-            },500)
+              this.$router.go(-1);
+            },1000)
           }else{
             this.showToast(data.data.message);
           }

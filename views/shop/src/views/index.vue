@@ -13,7 +13,7 @@
         <h4>
           <img src="../assets/images/icon_new.png" /><span>最新上架</span>
         </h4>
-        <router-link class="more_link" :to="{ path: '/goods_list', query:{ type: '3' } }"><img src="../assets/images/icon_right.png" /></router-link>
+        <router-link class="more_link" :to="{ path: '/goods', query:{ type: '3' } }"><img src="../assets/images/icon_right.png" /></router-link>
       </div>
       <div class="module_list">
         <list :goods="news"></list>
@@ -24,7 +24,7 @@
         <h4>
           <img src="../assets/images/icon_hot.png" /><span>热门商品</span>
         </h4>
-        <router-link class="more_link" :to="{ path: '/goods_list', query:{ type: '2' } }"><img src="../assets/images/icon_right.png" /></router-link>
+        <router-link class="more_link" :to="{ path: '/goods', query:{ type: '2' } }"><img src="../assets/images/icon_right.png" /></router-link>
       </div>
       <div class="module_list">
         <list :goods="hots"></list>
@@ -35,7 +35,7 @@
         <h4>
           <img src="../assets/images/icon_goods.png" /><span>更多商品</span>
         </h4>
-        <router-link class="more_link" :to="{ path: '/goods_list', query:{ type: '1' } }"><img src="../assets/images/icon_right.png" /></router-link>
+        <router-link class="more_link" :to="{ path: '/goods', query:{ type: '1' } }"><img src="../assets/images/icon_right.png" /></router-link>
       </div>
       <div class="module_list">
         <list :goods="goods"></list>

@@ -4,8 +4,8 @@
     <div class="details_info">
       <h4 class="details_name">
         <span>{{ details.name }}</span> 
-        <img v-if="!collectionState" src="../assets/images/icon_collection1.png" @click="appendCollection" />
-        <img v-else src="../assets/images/icon_collection2.png" @click="cancelCollection" />
+        <img v-if="!collectionState" src="../assets/images/icon_collection1.png" @click="switchCollection" />
+        <img v-else src="../assets/images/icon_collection2.png" @click="switchCollection" />
       </h4>
       <span class="details_price">
         价格: {{ details.saleState ? details.salePrice : details.price | money }}
@@ -15,9 +15,13 @@
     <p class="details_desc">{{ details.desc }}</p>
     <div class="recommend" v-if="recommend.length > 0">
       <h3>相关推荐</h3>
-      <div>
-        <list :goods="recommend"></list>
-      </div>
+      <ul>
+        <li v-for="(item, index) in recommend" :key="index" @click="reloadDetail(item._id)" >
+          <img :src="item.image" />
+          <p>{{ item.name }}</p>
+          <span>价格:{{ item.saleState ? item.salePrice : item.price | money }} <i v-if="item.saleState">{{ item.price | money }}</i></span>
+        </li>
+      </ul>
     </div>
     <div class="bottom">
       <span class="count">
@@ -41,6 +45,7 @@ export default {
   components:{
     "list": list
   },
+  inject:["reload"],
   data(){
     return {
       id:null,
@@ -69,23 +74,10 @@ export default {
       }
       return true
     },
-    // 添加收藏
-    appendCollection(){
+    // 收藏切换
+    switchCollection(){
       if(!this.judgeLogin()){ return }
-      this.$http.post('/api/collection/append', { goodsid : this.details._id }).then(data=>{
-        if(data.data.code == 200){
-          this.collectionState = !this.collectionState
-          Toast({
-            message: data.data.message,
-            duration: 1000
-          })
-        }
-      })
-    },
-    // 取消收藏
-    cancelCollection(){
-      if(!this.judgeLogin()){ return }
-      this.$http.post('/api/collection/cancel', { goodsid : this.details._id }).then(data=>{
+      this.$http.post('/api/collection/switch', { id : this.details._id }).then(data=>{
         if(data.data.code == 200){
           this.collectionState = !this.collectionState
           Toast({
@@ -103,6 +95,7 @@ export default {
       this.count--;
       this.count = Math.max(1, this.count);
     },
+    //加入购物车
     append(){
       if(!this.judgeLogin()){ return }
       this.$http.post('/api/car/append', {
@@ -128,6 +121,10 @@ export default {
         title: '提示',
         message: '还未开通支付功能，敬请期待！'
       }).then(action => {})
+    },
+    reloadDetail(id){
+      this.$router.push({ path : '/goods_details', query:{ id: id } })
+      this.reload()
     }
   },
   created(){
@@ -164,6 +161,13 @@ export default {
   .details_price i{ font-size: 0.24rem; color: #999; text-decoration: line-through; margin-left: 0.3rem; }
   .details_desc{ line-height: 1.8; color: #999; padding: 0.2rem 0.3rem; }
   .recommend h3{ padding: 0 0.3rem; height: 0.88rem; line-height: 0.88rem; font-size: 0.32rem; color: #FF6867; text-align: center; font-weight: bold; background-color: #f8f8f8; }
+  .recommend ul{ padding: 0.3rem 0.3rem 0; overflow: hidden; }
+  .recommend li{ float: left; width: 3.3rem; padding: 0.2rem; box-sizing: border-box; margin: 0 0.3rem 0.3rem 0; box-shadow: 0 0 10px 1px #ddd; border-radius: 0.2rem; background-color: #fff; }
+  .recommend li:nth-child(2n){ margin-right: 0; }
+  .recommend li img{ display: block; width: 100%; height: 2.9rem; box-shadow: 0 0 1px 1px #eee inset; }
+  .recommend li p{ line-height: 2; margin-top: 0.1rem; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: #666; }
+  .recommend li span{ font-size: 0.2rem; color: #FF6867; }
+  .recommend li span i{ text-decoration: line-through; margin-left: 0.05rem; color: #999; font-size: 0.2rem; }
   .bottom {  position: fixed; bottom: 0; left: 0; right: 0; background-color: #fff; border-top: 1px solid #eee; }
   .bottom .count { padding: 0.2rem 0.3rem; display: block; overflow: hidden; color: #999; }
   .bottom .count i{ line-height: 0.5rem;  float: left; }
@@ -174,5 +178,4 @@ export default {
   .bottom p{ width: 100%; height: 0.86rem; line-height: 0.86rem; color: #fff; text-align: center; font-size: 0.32rem; }
   .bottom p span{ float: left; width: 50%; height: 100%; background-color: #FF3333; }
   .bottom .append{ background-color: #FF6867; }
-
 </style>

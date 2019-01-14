@@ -11,10 +11,10 @@ export default {
     'layouts' : layouts
   },
   created(){
-    this.$http.post('/api/state').then(data=>{
+    this.$http.get('/api/user/state').then(data=>{
       if(data.data.code == 200){
-        sessionStorage.setItem('username', data.data.data.username);
-        sessionStorage.setItem('userid', data.data.data.id);
+        sessionStorage.setItem('name', data.data.data.name);
+        sessionStorage.setItem('id', data.data.data.id);
         this.$store.state.isLogin = true;
       }
     })
@@ -24,4 +24,5 @@ export default {
 
 <style>
   #app{ width: 100%; height: 100%; font-size: 0.28rem; }
+  img.not{ display: block; width: 7.5rem; }
 </style>
