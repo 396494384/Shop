@@ -112,13 +112,19 @@ export default {
         this.showMsg("请选择要上传的商品图片");
       } else if (_goodsdata.price == "") {
         this.showMsg("请输入商品价格");
+      } else if (!/^([1-9]\d*|[0])(\.\d+)?$/g.test(_goodsdata.price)) {
+        this.showMsg("请输入正确商品价格");
       } else if (_goodsdata.saleState && _goodsdata.salePrice == "") {
         this.showMsg("请输入打折后的价格");
+      } else if (_goodsdata.saleState && !/^([1-9]\d*|[0])(\.\d+)?$/g.test(_goodsdata.salePrice)) {
+        this.showMsg("请输入正确商品价格");
       } else if (_goodsdata.count == "") {
         this.showMsg("请输入商品库存");
+      } else if (!/^[1-9]\d+$/g.test(_goodsdata.count)) {
+        this.showMsg("请输入正确的库存数量");
       } else if (_goodsdata.desc == "") {
         this.showMsg("请输入商品描述");
-      } else {
+      } else { 
         // 图片没有修改
         if (this.src == _goodsdata.image) {
           this.$http.post("api/goods/update", {

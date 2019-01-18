@@ -1,5 +1,5 @@
 <template>
-  <div class="goods">
+  <div class="goods" ref="goods" >
     <div class="search">
       <label>
         <input type="text" placeholder="请输入搜索商品名" v-model="sendData.name" />
@@ -33,15 +33,19 @@
       </div>
     </div>
     <list :goods='goods'></list>
+    <p class="msg" v-if="loadingState">正在加载更多...</p>
+    <p class="msg" v-if="not">没有更多了</p>
   </div>
 </template>
 <script>
 import list from '../components/list'
 import { Toast } from 'mint-ui'
+import pullto from 'vue-pull-to'
 export default {
   name:'goods',
   components:{
-    "list": list
+    "list": list,
+    "pullto": pullto
   },
   data(){
     return {
@@ -56,10 +60,19 @@ export default {
         page: 1, //分页
         sortPrice: 0, //价格排序 0 - 不排序， -1 - 从高到低，  1 - 从低到高
         sortSalesVolume: 0 //销量排序 0 - 不排序， -1 - 从高到低，  1 - 从低到高
-      }
+      },
+      loadingState: false,
+      not: false
     }
   },
   methods:{
+    reset(){
+      this.sendData.sortPrice = 0;
+      this.sendData.sortSalesVolume = 0;
+      this.sendData.page = 1;
+      this.not = false;
+      this.loadingState = false;
+    },
     // 清空搜索
     empty(){
       if(this.sendData.name == ""){
@@ -72,7 +85,8 @@ export default {
       this.showText = "全部";
       this.sendData.sortPrice = 0;
       this.sendData.sortSalesVolume = 0;
-      this.show = false
+      this.show = false;
+      this.not = false;
       this.getDoods();
     },
     // 搜索
@@ -89,7 +103,8 @@ export default {
         this.showText = "全部";
         this.sendData.sortPrice = 0;
         this.sendData.sortSalesVolume = 0;
-        this.show = false
+        this.show = false;
+        this.not = false;
         this.getDoods();
       }
     },
@@ -112,6 +127,9 @@ export default {
         }
         this.sendData.category = id;
         this.sendData.page = 1;
+        this.not = false;
+        this.sendData.sortPrice = 0;
+        this.sendData.sortSalesVolume = 0;
         this.getDoods();
       }
     },
@@ -119,6 +137,9 @@ export default {
     sortSalesVolume(val){
       if(this.sendData.sortSalesVolume != val){
         this.sendData.sortSalesVolume = val;
+        this.sendData.page = 1;
+        this.not = false;
+        this.loadingState = false;
         this.getDoods()
       }
     },
@@ -126,14 +147,45 @@ export default {
     sortPrice(val){
       if(this.sendData.sortPrice != val){
         this.sendData.sortPrice = val;
+        this.sendData.page = 1;
+        this.not = false;
+        this.loadingState = false;
         this.getDoods()
       }
     },
     //获取商品列表
     getDoods(){
       this.$http.post('/api/goods/get_goods', this.sendData).then(data=>{
-        this.goods = data.data.data;
+        if(data.data.code == 200){
+          this.goods = data.data.data;
+        }
       })
+    },
+    // 加载更多
+    load() {
+      if(this.show != 0){ this.show = 0 }
+      if(this.loadingState || this.not){ return }
+      let _scrollTop = window.scrollY; //滚动的距离
+      let _clientHeight = document.body.clientHeight; //页面可视高度
+      let _goodsHeight = document.querySelector('.box').offsetHeight; //goods的高度
+      if(_scrollTop + _clientHeight >= _goodsHeight || _scrollTop + _clientHeight + 1 >= _goodsHeight || _scrollTop + _clientHeight - 1 >= _goodsHeight){
+        this.loadingState = true;
+        this.sendData.page = this.sendData.page + 1;
+        this.$http.post('/api/goods/get_goods', this.sendData).then(data=>{
+          let _data = data.data;
+          this.loadingState = false;
+          if(_data.code == 200){
+            if(_data.data.length == 0){
+              this.not = true;
+            }else{
+              this.goods = this.goods.concat(_data.data);
+            }
+          }else{
+            this.sendData.page = this.sendData.page - 1;
+          }
+        })
+        console.log("到底了")
+      }
     }
   },
   mounted(){
@@ -151,6 +203,11 @@ export default {
       this.categorys = data.data.data;
     })
     this.getDoods();
+
+    window.addEventListener('scroll', this.load);
+  },
+  destroyed(){
+    window.removeEventListener("scroll", this.load, false);
   }
 }
 </script>
@@ -172,4 +229,5 @@ export default {
 .sort div li{ margin: 0 0.2rem; line-height: 0.66rem; font-size: 0.24rem; color: #999; border-bottom: 1px solid #eee; }
 .sort div li.active{ color: #FF6867; }
 .sort div li:last-child{ border-bottom: none; }
+.msg{ padding: 0.1rem 0 0.4rem; text-align: center; color: #999; font-size: 0.24rem; letter-spacing: 2px; }
 </style>

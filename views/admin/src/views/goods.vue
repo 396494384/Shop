@@ -11,13 +11,13 @@
       <el-row :gutter="20">
         <el-col :span="6">
           <div>
-            <el-input placeholder="请输入名称" v-model="searchData.name">
+            <el-input placeholder="请输入名称" v-model="sendData.name">
               <template slot="prepend">商品名称</template>
             </el-input>
           </div>
         </el-col>
         <el-col :span="4">
-          <el-select v-model="searchData.category" placeholder="请选择商品类型">
+          <el-select v-model="sendData.category" placeholder="请选择商品类型">
             <el-option label="全部" value="" >全部</el-option>
             <el-option
               v-for="(item, index) in categorys"
@@ -28,9 +28,9 @@
           </el-select>
         </el-col>
         <el-col :span="9" class="radio">
-          <el-radio v-model="searchData.countType" label="1">显示全部</el-radio>
-          <el-radio v-model="searchData.countType" label="2">只显示有货</el-radio>
-          <el-radio v-model="searchData.countType" label="3">只显示无货</el-radio>
+          <el-radio v-model="sendData.countType" label="1">显示全部</el-radio>
+          <el-radio v-model="sendData.countType" label="2">只显示有货</el-radio>
+          <el-radio v-model="sendData.countType" label="3">只显示无货</el-radio>
         </el-col>
         <el-col :span="5" class="search_btn">
           <el-button type="defaule" icon="el-icon-delete" size="medium" @click="empty">清空</el-button>
@@ -58,7 +58,7 @@
       </el-table-column>
     </el-table>
     <div class="pager">
-      <el-pagination background layout="prev, pager, next" :page-size="limit" :total="total" @current-change="pagination"></el-pagination>
+      <el-pagination background layout="prev, pager, next" :current-page="sendData.page" :page-size="limit" :total="total" @current-change="pagination"></el-pagination>
     </div>
   </div>
 </template>
@@ -71,7 +71,8 @@ export default {
       goods: [],
       total:0,
       limit:1,
-      searchData: {
+      sendData: {
+        page: 1,
         name: "",
         category: "",
         countType: "1"
@@ -79,19 +80,22 @@ export default {
     };
   },
   methods: {
+    // 搜索
     search() {
-      this.$http.post('/api/goods/search', this.searchData).then(data=>{
-        this.goods = data.data.data;
-      })
+      this.sendData.page = 1;
+      this.getGoods()
     },
+    // 清空搜索
     empty(){
-      this.searchData = {
+      this.sendData = {
+        page: 1,
         name: "",
         category: "",
         countType: "1"
       }
       this.search()
     },
+    // 删除单个商品
     goodsDel(item) {
       let goodsId = item._id;
       this.$confirm("此操作将永久删除, 是否继续?", "提示", {
@@ -106,16 +110,19 @@ export default {
                 message: "删除成功",
                 type: "success"
               });
-              this.goods = this.goods.filter(item => {
-                return item._id != goodsId;
-              });
+              this.getGoods()
             }
           });
         }).catch(() => {});
     },
+    // 分页
     pagination(page){
-      // 获取商品
-      this.$http.post("/api/goods/all", { page: page }).then(data => {
+      this.sendData.page = page;
+      this.getGoods()
+    },
+    // 获取商品
+    getGoods(){
+      this.$http.post("/api/goods/all", this.sendData).then(data => {
         if (data.data.code == 200) {
           this.goods = data.data.data.goods;
           this.total = data.data.data.total;
@@ -130,7 +137,7 @@ export default {
       { name: "商品列表", path: null }
     ]
     // 获取商品
-    this.pagination(1)
+    this.getGoods()
     // 获取商品分类
     this.$http.get("/api/categorys/all").then(data => {
       if (data.data.code == 200) {

@@ -15,7 +15,7 @@
       </el-form-item>
       <el-form-item label="商品名称">
         <el-col :span="18">
-          <el-input v-model="goodsData.name"></el-input>
+          <el-input v-model="goodsData.name" placeholder="请输入商品名称"></el-input>
         </el-col>
       </el-form-item>
       <el-form-item label="商品图片">
@@ -29,7 +29,7 @@
       </el-form-item>
       <el-form-item label="商品价格">
         <el-col :span="18">
-          <el-input v-model="goodsData.price"></el-input>
+          <el-input v-model="goodsData.price" placeholder="请输入商品价格"></el-input>
         </el-col>
       </el-form-item>
       <el-form-item label="商品折扣">
@@ -46,7 +46,7 @@
       </el-form-item>
       <el-form-item label="商品库存">
         <el-col :span="18">
-          <el-input v-model="goodsData.count"></el-input>
+          <el-input v-model="goodsData.count" placeholder="请输入商品库存（整数）"></el-input>
         </el-col>
       </el-form-item>
       <el-form-item label="售卖类型">
@@ -113,10 +113,16 @@ export default {
         this.showMsg("请选择要上传的商品图片");
       } else if (goodsdata.price == "") {
         this.showMsg("请输入商品价格");
+      } else if (!/^([1-9]\d*|[0])(\.\d+)?$/g.test(goodsdata.price)) {
+        this.showMsg("请输入正确商品价格");
       } else if (goodsdata.saleState && goodsdata.salePrice == "") {
         this.showMsg("请输入打折后的价格");
+      } else if (goodsdata.saleState && !/^([1-9]\d*|[0])(\.\d+)?$/g.test(goodsdata.salePrice)) {
+        this.showMsg("请输入正确商品价格");
       } else if (goodsdata.count == "") {
         this.showMsg("请输入商品库存");
+      } else if (!/^[1-9]\d+$/g.test(goodsdata.count)) {
+        this.showMsg("请输入正确的库存数量");
       } else if (goodsdata.desc == "") {
         this.showMsg("请输入商品描述");
       } else {

@@ -68,22 +68,19 @@ export default {
     })
     // 普通商品
     this.$http.post('/api/goods/get_goods', {
-      sellType: '1',
-      count: 8
+      sellType: '1'
     }).then(data=>{
       this.goods = data.data.data;
     })
     // 2:热门商品
     this.$http.post('/api/goods/get_goods', {
-      sellType: '2',
-      count: 6
+      sellType: '2'
     }).then(data=>{
       this.hots = data.data.data;
     })
     // 3:最新上架
     this.$http.post('/api/goods/get_goods', {
-      sellType: '3',
-      count: 6
+      sellType: '3'
     }).then(data=>{
       this.news = data.data.data;
     })

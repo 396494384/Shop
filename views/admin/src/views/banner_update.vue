@@ -147,8 +147,18 @@ export default {
     ];
     this.$http.get(`/api/banner/banner?id=${ this.id }`).then(data=>{
       let _data = data.data.data
+      if(_data.relation && _data.goods == null){
+        this.relation = false
+        this.$message({
+          showClose: true,
+          message: '关联的商品已被删除！',
+          duration: 5000,
+          type: 'error'
+        });
+      }else{
+        this.relation = _data.relation
+      }
       this.src = this.oldSrc = _data.image
-      this.relation = _data.relation
       this.selectedCategory = this.relation ? _data.goods.category : ""
       this.selectedGoods = this.relation ? _data.goods._id : ""
       if(this.relation){

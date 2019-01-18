@@ -39,15 +39,27 @@ router.post('/upload', upload.single('file'), (req, res) => {
 // 后台Api
 // 获取商品
 router.post('/all', (req, res) => {
+  let _findObj = {};
+  let _countType = req.body.countType;
+  let _showCount = _countType == 2 ? { $gt: 0 } : _countType == 3 ? { $lte: 0 } : "";
+  if(req.body.name){
+    _findObj.name = req.body.name
+  }
+  if(req.body.category){
+    _findObj.category = req.body.category
+  }
+  if(_showCount){
+    _findObj.count = _showCount
+  }
   let _page = req.body.page || 1;
   let _pages = 0;
-  let _limit = 2;
-  Goods.countDocuments().then(count => {
+  let _limit = 8;
+  Goods.countDocuments(_findObj).then(count => {
     _pages = Math.ceil(count / _limit);
     _page = Math.min(_page, _pages);
     _page = Math.max(_page, 1);
     let _skip = (_page - 1) * _limit
-    Goods.find().limit(_limit).skip(_skip).populate(['category']).then(goods => {
+    Goods.find(_findObj).limit(_limit).skip(_skip).populate(['category']).then(goods => {
       res.json({
         code: 200,
         message: "商品获取成功",
@@ -124,40 +136,15 @@ router.get('/del', (req, res) => {
     })
   })
 })
-// 按需搜索商品
-router.post('/search', (req, res) => {
-  // countType 1 显示全部， 2 只显示有货， 3 只显示无货
-  let countType = req.body.countType;
-  let showCount = countType == 2 ? { $gt: 0 } : countType == 3 ? { $lte: 0 } : "";
-  let findObj = {
-    name: req.body.name,
-    category: req.body.category,
-    count: showCount
-  }
-  if (req.body.name == "") {
-    delete (findObj['name'])
-  }
-  if (req.body.category == "") {
-    delete (findObj['category'])
-  }
-  if (showCount == "") {
-    delete (findObj['count'])
-  }
-  Goods.find(findObj).populate(['category']).then(goods => {
-    res.json({
-      code: 200,
-      message: "商品搜索成功",
-      data: goods
-    })
-  })
-})
 
 // 前台Api
 // 获取商品列表
 router.post('/get_goods', (req, res) => {
+  let _page = req.body.page || 1;
   let _limit = 8;
   let _findObj = {};
   let _sort = {};
+  let _skip = (_page - 1) *_limit;
   if (req.body.name) {
     _findObj.name = req.body.name
   }
@@ -173,7 +160,7 @@ router.post('/get_goods', (req, res) => {
   if (req.body.sortPrice != 0) {
     _sort.sortPrice = req.body.sortPrice
   }
-  Goods.find(_findObj).sort(_sort).limit(_limit).populate(['category']).then(goods => {
+  Goods.find(_findObj).sort(_sort).limit(_limit).skip(_skip).populate(['category']).then(goods => {
     res.json({
       code: 200,
       message: "商品获取成功",
