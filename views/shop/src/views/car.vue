@@ -28,7 +28,8 @@
         </span>
       </li>
     </ul>
-    <div class="car_bottom">
+    <img v-if="cars.length == 0 && loadComplete" class="not" src="../assets/images/not.png" />
+    <div class="car_bottom" v-if="cars.length > 0">
       <i @click="checkAll">{{ checkState ? '取消全选' : '全选' }}</i>
       <b>去支付</b>
       <span>总价: {{ total | money }}</span>
@@ -41,8 +42,9 @@ export default {
   name:'car',
   data(){
     return {
+      loadComplete: false,
       delId:"",
-      cars:null,
+      cars:[],
       total:0,
       checkState: false,
       moveStart:0,
@@ -148,6 +150,7 @@ export default {
   },
   mounted(){
     this.$http.get('/api/car/cars').then(data=>{
+      this.loadComplete = true;
       if(data.data.code == 200){
         data.data.data.forEach(i=>{
           i.check = false

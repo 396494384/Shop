@@ -1,6 +1,14 @@
 <template>
   <div class="register">
     <form>
+      <label class="photo">
+        <input id="image" name="file" type="file" @change="getImage($event)" ref="image">
+        <p>
+          <img v-if="src == ''" src="../assets/images/img_photo.png" />
+          <img v-else :src="src" />
+        </p>
+        <span>上传用户头像</span>
+      </label>
       <label>
         请输入用户名
         <input type="text" placeholder="请输入用户名" v-model="name">
@@ -28,12 +36,24 @@ export default {
     return {
       name: "",
       password: "",
-      repassword: ""
+      repassword: "",
+      src:""
     };
   },
   methods: {
+    getImage(e) {
+      let _file = e.target.files[0];
+      let _reader = new FileReader();
+      let _that = this;
+      _reader.readAsDataURL(_file);
+      _reader.onload = function(e) {
+        _that.src = this.result;
+      };
+    },
     register() {
-      if (this.name == "") {
+      if(this.src == ""){
+        this.showToast("请上传用户头像");
+      } else if (this.name == "") {
         this.showToast("请输入用户名");
       } else if (this.password == "") {
         this.showToast("请输入密码");
@@ -42,17 +62,36 @@ export default {
       } else if (this.repassword != this.password) {
         this.showToast("两次密码不一致");
       } else {
-        this.$http.post("/api/user/register", {
-          name: this.name,
-          password: this.password
+        // 上传图片
+        let _formData = new FormData();
+        _formData.append("file", this.$refs.image.files[0]);
+        this.$http({
+          method: "post",
+          url: "api/user/upload",            
+          anync: true,
+          contentType: false,
+          processData: false,
+          data: _formData
         }).then(data => {
-          this.showToast(data.data.message);
-          if(data.data.code == 200){
-            setTimeout(()=>{
-              this.$router.push({ path: '/login' })
-            },1000)
+          if (data.data.code == 200) {
+            return data;
+          } else {
+            this.showMsg("图片上传失败", "error");
           }
-        });
+        }).then(data=>{
+          this.$http.post("/api/user/register", {
+            photo: data.data.data,
+            name: this.name,
+            password: this.password
+          }).then(data => {
+            this.showToast(data.data.message);
+            if(data.data.code == 200){
+              setTimeout(()=>{
+                this.$router.push({ path: '/login' })
+              },1000)
+            }
+          });
+        })
       }
     },
     showToast(str) {
@@ -65,11 +104,16 @@ export default {
   created() {
     this.$store.state.pageTitle = "注册";
     this.$store.state.showFootBar = false;
-  },
-  mounted() {}
+  }
 };
 </script>
 <style scoped>
+.register .photo input{ width: 0; height: 0; display: none; }
+.register .photo p{ display: block; width: 1.2rem; height: 1.2rem; border-radius: 50%; overflow: hidden; margin: 0 auto 0.2rem; }
+.register .photo img{ display: block; width: 100%; height: 100%; }
+.register .photo span{ display: block; text-align: center; color: #999; font-size: 0.24rem; }
+
+
 .register form {
   margin: 0.8rem;
   background-color: #fff;

@@ -36,11 +36,9 @@ export default {
           password: this.password
         }).then(data => {
           if(data.data.code == 200){
-            sessionStorage.setItem('name', data.data.data.name);
-            sessionStorage.setItem('id', data.data.data.id);
             this.$store.state.isLogin = true;
             setTimeout(()=>{
-              this.$router.go(-1);
+              this.$router.push({ path : '/' });
             },1000)
           }else{
             this.showToast(data.data.message);

@@ -23,9 +23,9 @@ export default {
   },
   mounted(){
     this.$http.get('/api/record/all').then(data=>{
+      this.loadComplete = true;
       if(data.data.code == 200){
         this.record = data.data.data;
-        this.loadComplete = true;
       }
     })
   }

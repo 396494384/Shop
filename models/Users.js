@@ -10,7 +10,7 @@ const usersSchema = new mongoose.Schema({
   },
   photo:{ //用户头像
     type: String,
-    default:""
+    default:"../assets/images/img_photo.png"
   },
   date:{ //注册时间
     type: Date,
