@@ -131,7 +131,7 @@ export default {
         formData.append("file", this.$refs.image.files[0]);
         this.$http({
           method: "post",
-          url: "api/goods/upload",
+          url: "/api/goods/upload",
           anync: true,
           contentType: false,
           processData: false,
@@ -147,7 +147,7 @@ export default {
           .then(data => {
             //上传商品信息
             goodsdata.image = data.data.data;
-            this.$http.post("api/goods/add", goodsdata).then(data => {
+            this.$http.post("/api/goods/add", goodsdata).then(data => {
               if (data.data.code == 200) {
                 this.showMsg(data.data.message, "success");
                 setTimeout(() => {

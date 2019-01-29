@@ -14,7 +14,8 @@ import AddressForm from './views/address_form'
 Vue.use(Router)
 
 export default new Router({
-  mode: 'history',
+  // mode: 'history',
+  mode: 'hash',
   base: process.env.BASE_URL,
   routes: [
     {

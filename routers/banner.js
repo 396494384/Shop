@@ -31,6 +31,7 @@ router.post('/upload', upload.single('file'), (req, res) => {
     code: 200,
     message: "图片上传成功",
     data: `http://${req.headers.host}\\${req.file.path}`
+    // data: `${req.headers.origin}\\${req.file.path}`
   })
 })
 // 获取Banner

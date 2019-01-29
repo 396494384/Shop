@@ -30,6 +30,7 @@ router.post('/upload', upload.single('file'), (req, res) => {
     code: 200,
     message: "图片上传成功",
     data: `http://${req.headers.host}\\${req.file.path}`
+    // data: `${req.headers.origin}\\${req.file.path}`
   })
 })
 
@@ -66,15 +67,22 @@ router.post('/login', (req, res) => {
           id: user._id
         }));
         User.updateOne(
-          { name: req.body.name },
+          { _id: user._id },
           { lastTime: new Date() }
-        )
+        ).then(()=>{
+          res.json({
+            code: 200,
+            message: "登录成功",
+            data: user
+          })
+        })
+      }else{
+        res.json({
+          code: 0,
+          message: "密码错误",
+          data: user
+        })
       }
-      res.json({
-        code: _state ? 200 : 0,
-        message: _state ? "登录成功" : "密码错误",
-        data: user
-      })
     }
   })
 })

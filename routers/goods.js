@@ -32,7 +32,8 @@ router.post('/upload', upload.single('file'), (req, res) => {
   res.json({
     code: 200,
     message: "图片上传成功",
-    data: 'http://' + req.headers.host + '\\' + req.file.path
+    data: `http://${req.headers.host}\\${req.file.path}`
+    // data: `${req.headers.origin}\\${req.file.path}`
   })
 })
 

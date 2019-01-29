@@ -67,7 +67,7 @@ export default {
         _formData.append("file", this.$refs.image.files[0]);
         this.$http({
           method: "post",
-          url: "api/user/upload",            
+          url: "/api/user/upload",            
           anync: true,
           contentType: false,
           processData: false,

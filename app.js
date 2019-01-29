@@ -39,8 +39,25 @@ app.all('*', function(req, res, next) {
 });
 // 处理文件访问
 app.get('/upload/*', (req, res) => {
-  res.sendFile(__dirname + "\\" + req.url);
+  res.sendFile(__dirname + req.url);
 })
+ 
+/********* 上传到服务器的配制 ***  ******* */
+// // 设置静态文件托管
+// app.use('/views', express.static(__dirname + '/views'))
+// // 页面访问
+// app.get('/', (req, res)=>{
+//   const html = fs.readFileSync(path.resolve(__dirname, './views/shop/dist/index.html'), 'utf-8')
+//   res.setHeader('content-type', 'text/html');
+//   res.send(html)
+// })
+// app.get('/admin', (req, res) =>{
+//   const html = fs.readFileSync(path.resolve(__dirname, './views/admin/dist/index.html'), 'utf-8')
+//   res.setHeader('content-type', 'text/html');
+//   res.send(html)
+// })
+/**          end         */
+
 // 设置路由
 app.use('/admin', require('./routers/admin')) //管理员api
 app.use('/user', require('./routers/user')) //用户

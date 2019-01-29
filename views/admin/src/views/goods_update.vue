@@ -127,7 +127,7 @@ export default {
       } else { 
         // 图片没有修改
         if (this.src == _goodsdata.image) {
-          this.$http.post("api/goods/update", {
+          this.$http.post("/api/goods/update", {
             id: this.id,
             goodsData: _goodsdata
           }).then(data => {
@@ -144,7 +144,7 @@ export default {
           _formData.append("file", this.$refs.image.files[0]);
           this.$http({
             method: "post",
-            url: "api/goods/upload",
+            url: "/api/goods/upload",
             anync: true,
             contentType: false,
             processData: false,
@@ -158,7 +158,7 @@ export default {
           }).then(data => {
             //上传商品信息
             _goodsdata.image = data.data.data;
-            this.$http.post("api/goods/update", {
+            this.$http.post("/api/goods/update", {
               id: this.id,
               goodsData: _goodsdata
             }).then(data => {

@@ -97,7 +97,7 @@ export default {
           formData.append("file", this.$refs.image.files[0]);
           this.$http({
             method: "post",
-            url: "api/banner/upload",
+            url: "/api/banner/upload",
             anync: true,
             contentType: false,
             processData: false,
@@ -111,7 +111,7 @@ export default {
           }).then(data => {
             //上传Banner
             let _src = data.data.data;
-            this.$http.post("api/banner/update", {
+            this.$http.post("/api/banner/update", {
               id: this.id,
               image: _src,
               relation: this.relation,

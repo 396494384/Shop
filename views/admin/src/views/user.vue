@@ -29,7 +29,7 @@
     </div>
     <el-table :data="users" border style="width: 100%">
       <el-table-column prop="_id" label="ID" ></el-table-column>
-      <el-table-column align="center" prop="username" label="用户名" ></el-table-column>
+      <el-table-column align="center" prop="name" label="用户名" ></el-table-column>
       <el-table-column align="center" label="注册时间">
         <template slot-scope="scope">
           <span>{{ scope.row.date | date }}</span>
