@@ -127,15 +127,19 @@ export default {
           this.goods = data.data.data.goods;
           this.total = data.data.data.total;
           this.limit = data.data.data.limit;
+          this.$store.state.loading = false;
         }
       });
     }
   },
-  mounted() {
+  beforeCreate(){
+    this.$store.state.loading = true;
     this.$store.state.nav = [
       { name: "商品管理", path: '/goods' },
       { name: "商品列表", path: null }
     ]
+  },
+  mounted() {
     // 获取商品
     this.getGoods()
     // 获取商品分类

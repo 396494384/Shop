@@ -69,10 +69,12 @@ app.use('/collection', require('./routers/collection')) //用户收藏
 app.use('/record', require('./routers/record')) //用户浏览记录
 app.use('/address', require('./routers/address')) //用户收货地址
 // 启动
-mongoose.connect('mongodb://localhost:27021/shop', { useNewUrlParser: true }, err => {
+mongoose.connect('mongodb://ydias:qq942266@ds149875.mlab.com:49875/shop', { useNewUrlParser: true }, err => {
   if (err) throw err;
   console.log("MongoDB OK")
   app.listen(port, () => {
     console.log(`Server running on the port ${port}`)
   })
+}).catch(err=>{
+  console.log(err)
 })

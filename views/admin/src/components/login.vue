@@ -36,7 +36,9 @@ export default {
           this.showMsg(data.data.message, _type)
           if(data.data.code == 200){
             setTimeout(()=>{
-              this.$router.go(0);
+              this.$store.state.isLogin = true;
+              this.$store.state.admin = this.name;
+              this.$router.push({ path:'/index' });
             },1000)
           }else{
             this.$store.state.isLogin = false;

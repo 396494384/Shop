@@ -117,7 +117,10 @@ export default {
         this.showMsg("请输入正确商品价格");
       } else if (goodsdata.saleState && goodsdata.salePrice == "") {
         this.showMsg("请输入打折后的价格");
-      } else if (goodsdata.saleState && !/^([1-9]\d*|[0])(\.\d+)?$/g.test(goodsdata.salePrice)) {
+      } else if (
+        goodsdata.saleState &&
+        !/^([1-9]\d*|[0])(\.\d+)?$/g.test(goodsdata.salePrice)
+      ) {
         this.showMsg("请输入正确商品价格");
       } else if (goodsdata.count == "") {
         this.showMsg("请输入商品库存");
@@ -169,11 +172,13 @@ export default {
       });
     }
   },
-  mounted() {
+  beforeCreate(){
     this.$store.state.nav = [
       { name: "商品管理", path: "/goods" },
       { name: "商品添加", path: null }
     ];
+  },
+  mounted() {
     // 获取商品分类
     this.$http.get("/api/categorys/all").then(data => {
       this.categorys = data.data.data;

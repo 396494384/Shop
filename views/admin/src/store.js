@@ -8,7 +8,7 @@ export default new Vuex.Store({
     isLogin:true, //保存登录状态
     admin:"", //保存登录用户名
     nav:[], //面包导航
-    loading: false,
+    loading: true,
     loadingText:"加载数据中..."
   },
   mutations: {

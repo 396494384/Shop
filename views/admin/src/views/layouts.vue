@@ -40,7 +40,7 @@
       </el-header>
       <el-container>
         <leftmenu></leftmenu>
-        <el-container v-loading="this.$store.state.loading" :element-loading-text="this.$store.state.loadingText">
+        <el-container v-loading="this.$store.state.loading" :element-loading-text="this.$store.state.loadingText" element-loading-background="rgba(255, 255, 255, 0.8)">
           <el-main>
             <breadnav :nav="this.$store.state.nav"></breadnav>
             <router-view/>
